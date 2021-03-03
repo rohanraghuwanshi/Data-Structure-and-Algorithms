@@ -1,30 +1,24 @@
 def get_optimal_value(capacity, weights, values):
     value = 0.
-    if capacity == 0:
-        return 0
-    for i in range(n):
-        max_index = select_max_index(values, weights)
-        if max_index >= 0:
-            available_weights = min(capacity, weights[max_index])
-            value = value + available_weights * values[max_index]/weights[max_index]
-            weights[max_index] = weights[max_index] - available_weights
-            capacity = capacity - available_weights
-
+    proportion = [float(v) / float(w) for v, w in zip(values, weights)]
+    for _ in range(len(weights) + 1):
+        if capacity == 0:
+            return value
+        max_weight = max(proportion)
+        index = proportion.index(max_weight)
+        proportion[index] = -1
+        add_capacity = min(capacity, weights[index])
+        value += add_capacity * max_weight
+        weights[index] -= add_capacity
+        capacity -= add_capacity
     return value
 
-def select_max_index(values, weights):
-    index = -1
-    max = 0
-    for i in range(n):
-        if weights[i] > 0 and (values[i] / weights[i]) > max:
-            max = values[i]/weights[i]
-            index = i
-    return index
-
-
-data = list(map(int, input().split()))
-n, capacity = data[0:2]
-values = data[2:(2 * n + 2):2]
-weights = data[3:(2 * n + 2):2]
+n, capacity = list(map(int, input().split()))
+values = []
+weights = []
+for i in range(n):
+    a, b = list(map(int, input().split()))
+    values.append(a)
+    weights.append(b)
 opt_value = get_optimal_value(capacity, weights, values)
 print("{:.10f}".format(opt_value))
