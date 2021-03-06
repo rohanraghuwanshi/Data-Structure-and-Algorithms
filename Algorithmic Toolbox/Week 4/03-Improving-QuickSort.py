@@ -31,7 +31,7 @@ def randomized_quick_sort(arr, left, right):
 
 
 n = int(input())
-arr = [int(x) for x in input()]
+arr = list(map(int, input().split()))
 randomized_quick_sort(arr, 0, n - 1)
 for x in arr:
-    print(x, end='')
+    print(x, end=' ')

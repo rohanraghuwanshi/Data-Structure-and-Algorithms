@@ -31,6 +31,6 @@ def inversion_by_merge_sort(a):
 
     return c,count_inversion
 
-
+n = int(input())
 a = list(map(int, input().split()))
 print(inversion_by_merge_sort(a)[-1])
