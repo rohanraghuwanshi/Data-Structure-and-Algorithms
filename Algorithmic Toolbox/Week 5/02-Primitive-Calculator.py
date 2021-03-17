@@ -1,51 +1,37 @@
 def optimal_sequence(n):
-    if n == 1:
-        return [1]
-    ops = min_ops(n)
-    return construct_min_list(n, ops)
+    hop_count = [0] * (n + 1)
 
-def construct_min_list(n, ops):
-    result = []
-    while(n>=1):
-        result.append(n)
-        if n%3 != 0 and n%2 != 0:
-            n -= 1
+    hop_count[1] = 1
+    for i in range(2, n + 1):
+        indices = [i - 1]
+        if i % 2 == 0:
+            indices.append(i // 2)
+        if i % 3 == 0:
+            indices.append(i // 3)
 
-        elif n%3 == 0 and n%2 == 0:
-            n = int(n/3)
+        min_hops = min([hop_count[x] for x in indices])
 
-        elif n%3 == 0:
-            if ops[n-1] < ops[n//3]:
-                n = n-1
-            else:
-                n = n // 3
+        hop_count[i] = min_hops + 1
 
-        elif n%2 == 0:
-            if ops[n-1] < ops[n//2]:
-                n = n-1
-            else:
-                n = n // 2
+    ptr = n
+    optimal_seq = [ptr]
+    while ptr != 1:
 
-    return reversed(result)
+        candidates = [ptr - 1]
+        if ptr % 2 == 0:
+            candidates.append(ptr // 2)
+        if ptr % 3 == 0:
+            candidates.append(ptr // 3)
 
-def min_ops(n):
-    result = [0 for i in range(n+1)]
-    for i in range(2,n+1):
-        min_1 = result[i-1]
-        min_2 = sys.maxsize
-        min_3 = sys.maxsize
+        ptr = min(
+            [(c, hop_count[c]) for c in candidates],
+            key=lambda x: x[1]
+        )[0]
+        optimal_seq.append(ptr)
 
-        if i%2 == 0:
-            min_2 = result[int(i//2)]
+    return reversed(optimal_seq)
 
-        if i%3 == 0:
-            min_3 = result[int(i//3)]
-
-        minOperations = min(min_1,min_2,min_3)+1
-        result[i] = minOperations
-
-    return result
-
+    
 n = int(input())
 sequence = list(optimal_sequence(n))
 print(len(sequence) - 1)
